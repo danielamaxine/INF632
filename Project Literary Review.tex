@@ -1,0 +1,130 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{url}
+
+\begin{document}
+
+\title{Wearable Laryngeal Sensor Systems for Swallow Detection and Ingestate Classification Toward Dysphagia Screening}
+
+\author{\IEEEauthorblockN{Daniela Hernández}
+\IEEEauthorblockA{School of Informatics, Computing, and Cyber Systems\\
+Northern Arizona University\\
+Flagstaff, AZ, United States\\
+dmh599@nau.edu}
+}
+
+\maketitle
+
+\begin{abstract}
+I think wearable sensors are promising tools to monitor swallowing without invasive methods, which could help in dysphagia screening and understanding eating behavior. Previous studies show that accelerometers, contact microphones, and other neck sensors can detect swallows reliably, but most only indicate whether a swallow happened or not. The way liquids, semi-solids, solids, and pills move through the throat differs in texture and speed, so I think wearable sensors can pick up these differences. In this paper, I review wearable swallowing systems, how signals could be processed, and machine learning methods that could classify swallows. I will also propose a system to measure these differences in healthy adults, which could be a first step toward using wearable sensors to screen for dysphagia. I think understanding normal swallowing patterns is important before I will use this technology for real clinical assessment.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Swallow detection, wearable sensors, ingestate classification, dysphagia, laryngeal signals, accelerometer, contact microphone
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Swallowing is a complicated process that requires muscles and nerves to work together precisely. Dysphagia, or difficulty swallowing, can cause serious problems like choking, malnutrition, and illness. The gold standards for studying swallowing, like videofluoroscopic studies or endoscopy, provide detailed results but are invasive, expensive, and not practical for everyday monitoring.
+
+I think wearable sensors on the neck could be a non-invasive option. I will use accelerometers, contact microphones, electromyography (EMG), and strain sensors to detect swallows with high accuracy. I think machine learning could use features from these signals to indicate when a swallow happens.
+
+Most current systems only detect swallows. I think swallowing looks different depending on what is being eaten or drunk. Liquids, semi-solids, solids, and pills move differently in the throat, and the muscles behave differently too. I will explore this by using multimodal sensors to understand the biomechanical differences of various ingestates.
+
+\section{Related Work}
+
+Wearable sensors for swallow detection have been studied extensively, yet most research focuses on detecting swallows rather than characterizing the type of food or drink being ingested. Hossain et al.~\cite{1} conducted a systematic review of sensor-based methods for measuring eating behavior, showing that accelerometers and contact microphones can reliably detect swallow events. While their work demonstrates the potential of wearable devices, I think most studies evaluated only a small set of ingestate types under controlled conditions, leaving open the question of performance across diverse textures and bolus volumes.
+
+Kalantarian et al.~\cite{2} developed a piezoelectric sensor-based necklace to monitor eating habits in real time, primarily for liquids. I think this demonstrates that continuous, non-invasive swallow tracking outside the laboratory is feasible. However, the system primarily detects swallow events and does not differentiate between liquids, semi-solids, solids, or pills. Similarly, O’Brien et al.~\cite{3} combined wearable sensors with machine learning to track biomarkers of dysphagia, showing that advanced analytics could enhance swallow detection. I think ingestate classification was not addressed, highlighting an ongoing gap.
+
+Murillo-Arbizu et al.~\cite{4} used back-extrusion tests to classify commercial foods by texture for dysphagia management, while Wong et al.~\cite{5} provided quantitative data on texture-modified foods and thickened liquids following the International Dysphagia Diet Standardisation Initiative (IDDSI) guidelines. I think these studies suggest that the physical properties of the ingestate significantly affect swallowing biomechanics. I will incorporate these measurements into wearable sensing to enable a more precise characterization of swallow patterns across different ingestates.
+
+Recent work has explored multimodal approaches. So et al.~\cite{6} reviewed acoustic and accelerometric wearable technologies, noting that combining multiple signals could improve detection robustness. Song et al.~\cite{7} demonstrated a deep ensemble classification system using vibration sensors to detect throat-related events with high accuracy. I think integrating multiple sensor modalities with machine learning provides a strong foundation for moving beyond event detection toward functional analysis of swallowing.
+
+I think a consistent gap remains: current wearable systems rarely quantify differences between ingestate types or bolus volumes, and few studies have established normative baselines in healthy populations. I will address this gap by systematically measuring biomechanical differences in swallowing liquids, semi-solids, solids, and pills using a multimodal wearable platform. I think establishing these baselines is critical for developing classification models that could contribute to non-invasive, real-time dysphagia screening.
+
+\section{Proposed Methods}
+
+\subsection{Participants}
+I will recruit 15-20 healthy adults without swallowing problems. I think understanding normal swallowing patterns is important before looking at clinical cases.
+
+\subsection{Instrumentation}
+I will use a wearable neck device that includes:
+\begin{itemize}
+    \item A tri-axial accelerometer
+    \item A contact microphone
+    \item Optional electromyography (EMG)
+\end{itemize}
+The sensors will sit over the thyroid cartilage to capture throat movements and vibrations.
+
+\subsection{Experimental Protocol}
+I will have participants swallow:
+\begin{itemize}
+    \item Thin liquid, like water
+    \item Semi-solid, like yogurt
+    \item Solid, like a cracker
+    \item Pill, standard capsule
+\end{itemize}
+I will randomize bolus volumes of 5, 10, and 15 milliliters (mL). Each swallow will be recorded for analysis.
+
+\subsection{Signal Processing}
+I will process the raw sensor signals to extract meaningful information about each swallow. I will filter accelerometer signals between 0.1 and 50 Hz to isolate slow larynx movements, and microphone signals from 0.1 to 3 kHz to focus on swallowing sounds.
+
+I will calculate features that describe the signals. Time-domain features will include root mean square (RMS):
+\[
+RMS = \sqrt{\frac{1}{N} \sum_{n=1}^{N} x[n]^2}
+\]
+and signal energy:
+\[
+E = \sum_{n=1}^{N} x[n]^2
+\]
+Frequency-domain features will include the spectral centroid:
+\[
+C = \frac{\sum f_k X(k)}{\sum X(k)}
+\]
+I think liquids will create faster, higher-frequency signals, while solids create slower, lower-frequency signals. I will also use wavelets and entropy measures to capture short bursts or irregular patterns.
+
+\subsection{Classification}
+I will train machine learning models such as support vector machines (SVM), Random Forest, and shallow neural networks to classify:
+\begin{itemize}
+    \item Ingestate type
+    \item Bolus volume
+\end{itemize}
+I will use cross-validation to evaluate generalization and identify which features carry the most information.
+
+\section{Expected Results and Discussion}
+I think different ingestates will create distinguishable patterns. Liquids will have quick, low-amplitude accelerometer signals, while solids and pills will be stronger and slower. Semi-solids will be intermediate. I think my models will classify them with over 75 percent accuracy.
+
+I think understanding normal swallowing patterns is the first step toward clinical applications. Deviations from these patterns could help detect dysphagia early or track dietary compliance. I will consider extending this work to older adults or people with swallowing disorders in future studies.
+
+\section{Conclusion}
+I think wearable swallow detection has advanced, but most studies focus only on detecting events. I will focus on classifying ingestate type and measuring swallow volume. By quantifying biomechanical differences in healthy adults, I think I will create a foundation for using wearable sensors in dysphagia screening, allowing non-invasive, continuous monitoring in real-life settings.
+
+\begin{thebibliography}{00}
+
+\bibitem{1}
+D. Hossain, J. G. Thomas, M. A. McCrory, J. Higgins, and E. Sazonov, “A Systematic Review of Sensor-Based Methods for Measurement of Eating Behavior,” Sensors, 2025.
+
+\bibitem{2}
+H. Kalantarian, N. Alshurafa, T. Le, and M. Sarrafzadeh, “Monitoring eating habits using a piezoelectric sensor-based necklace,” Computers in Biology and Medicine, 2015.
+
+\bibitem{3}
+M. K. O’Brien, et al., “Advanced Machine Learning Tools to Monitor Biomarkers of Dysphagia: A Wearable Sensor Proof-of-Concept Study,” Digital Biomarkers, 2021.
+
+\bibitem{4}
+M. T. Murillo-Arbizu, L. Urtasun del Castillo, S. González-Casado, J. J. Marín-Méndez, F. C. Ibañez, and M. J. Beriain, “Textural Classification of Commercial Foodstuffs for Dysphagia Using Back-Extrusion Test,” Foods, 2025.
+
+\bibitem{5}
+M. C. Wong, K. M. K. Chan, T. T. Wong, H. W. Tang, H. Y. Chung, and H. S. Kwan, “Quantitative Textural and Rheological Data on Different Levels of Texture-Modified Food and Thickened Liquids Classified Using the International Dysphagia Diet Standardisation Initiative (IDDSI) Guideline,” Foods, 2023.
+
+\bibitem{6}
+B. P.-H. So, et al., “Swallow Detection with Acoustics and Accelerometric-Based Wearable Technology: A Scoping Review,” International Journal of Environmental Research and Public Health, 2022.
+
+\bibitem{7}
+Y. Song, I. Yun, S. Giovanoli, C. A. Easthope, and Y. Chung, “Multimodal deep ensemble classification system with wearable vibration sensor for detecting throat-related events,” npj Digital Medicine, 2025.
+
+\end{thebibliography}
+
+\end{document}
