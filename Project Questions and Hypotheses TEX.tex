@@ -1,0 +1,47 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{url}
+
+\begin{document}
+
+\title{Research Questions and Hypothesis}
+
+\author{
+Daniela Hernández\\
+\IEEEauthorblockA{
+School of Informatics, Computing, and Cyber Systems\\
+Northern Arizona University\\
+Flagstaff, AZ, United States\\
+dmh599@nau.edu
+}
+}
+
+\maketitle
+
+\section{Primary Research Question}
+The primary research question of this study is:
+\begin{quote}
+Can a multimodal wearable neck sensor system accurately classify ingestate type (liquid, semi-solid, solid, pill) and bolus volume in healthy adults based on biomechanical swallowing signals?
+\end{quote}
+
+\section{Primary Hypothesis}
+I hypothesize that combining accelerometer and contact microphone signals in a multimodal wearable system will allow ingestate type (liquid, semi-solid, solid, pill) to be classified with accuracy significantly above chance level (25\% for four classes). I further hypothesize that this combined multimodal approach will perform better than using either sensing modality alone.
+
+\section{Secondary Hypothesis 1}
+I hypothesize that bolus volume (5 mL, 10 mL, 15 mL) will affect swallow duration and signal amplitude, with larger volumes producing longer swallow durations and stronger sensor signals.
+
+\section{Secondary Hypothesis 2}
+I hypothesize that ingestate type will have a greater effect on swallow duration than bolus volume, meaning that texture differences (liquid vs. solid vs. pill) will produce more noticeable changes in the recorded signals than changes in volume.
+
+\section{Expected Results}
+I expect that liquids, semi-solids, solids, and pills will produce measurable differences in swallow duration and signal amplitude. Liquids may produce shorter and quicker movements, while solids and pills may require slightly longer and stronger throat motion. Based on these differences, I expect that a basic classification model will distinguish ingestate types with moderate accuracy (approximately 65--75\%). I also expect that larger bolus volumes will increase swallow duration and signal amplitude.
+
+\section{Alternative Results}
+It is possible that differences between ingestate types will be smaller than expected in healthy adults because swallowing is highly controlled and efficient. In that case, classification accuracy may be only slightly above chance. It is also possible that bolus volume may influence the signals more strongly than ingestate texture. Additionally, one sensor alone may perform similarly to the combined system, suggesting that multimodal sensing does not significantly improve classification performance in healthy individuals.
+
+\section{How This Project Investigates the Question}
+By collecting synchronized accelerometer and contact microphone data during controlled swallowing trials of different ingestate types and volumes, I will be able to directly measure how swallow duration and signal amplitude change across conditions. Using these measurements, I will train and evaluate classification models to determine whether ingestate type and volume can be distinguished above chance level. This approach allows me to establish baseline swallowing patterns in healthy adults, which is an important first step toward future dysphagia screening applications.
+
+\end{document}
