@@ -1,0 +1,98 @@
+\documentclass[10pt,conference]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+\usepackage[backend=biber,style=ieee]{biblatex}
+\usepackage{lipsum} % just for placeholder text, can remove
+
+% Use filecontents to embed the bibliography directly
+\usepackage{filecontents}
+
+\begin{filecontents}{\jobname.bib}
+@online{freq_chart,
+  title = {Sound Frequency Chart},
+  author = {{Acoustical Solutions}},
+  url = {https://acousticalsolutions.com/sound-frequency-chart},
+  year = {n.d.},
+  note = {[Online]}
+}
+
+@online{nyquist,
+  title = {Nyquist Frequency},
+  author = {{Wikipedia}},
+  url = {https://en.wikipedia.org/wiki/Nyquist_frequency},
+  year = {n.d.},
+  note = {[Online]}
+}
+
+@online{adc,
+  title = {Analog-to-Digital Conversion},
+  author = {{SparkFun Electronics}},
+  url = {https://learn.sparkfun.com/tutorials/analog-to-digital-conversion/all},
+  year = {n.d.},
+  note = {[Online]}
+}
+
+@book{bishop,
+  title={Pattern Recognition and Machine Learning},
+  author={Bishop, C. M.},
+  year={2006},
+  publisher={Springer},
+  address={New York, NY, USA}
+}
+\end{filecontents}
+
+\addbibresource{\jobname.bib}
+
+\begin{document}
+
+\title{Methods Plan: Swallowing Signal Classification Using a Lavalier Microphone}
+
+\author{
+Daniela Hernández\\
+\IEEEauthorblockA{
+School of Informatics, Computing, and Cyber Systems\\
+Northern Arizona University\\
+Flagstaff, AZ, United States\\
+dmh599@nau.edu
+}
+}
+
+\maketitle
+
+\section{Methods Plan}
+
+\subsection{Data Collection Protocol}
+To address the primary research question of whether swallowing signals can be used to classify ingestate type and bolus volume, data will be collected using a wearable neck sensing setup. A lavalier lapel microphone (serving as a contact microphone) will be placed on the anterior neck near the larynx to capture acoustic signals generated during swallowing. Although the broader research question includes multimodal sensing, this study focuses on the microphone modality as a baseline for classification performance.
+
+The subject will be seated upright in a quiet, controlled indoor environment to reduce background noise and motion artifacts. The microphone will be secured at a consistent anatomical location across all trials to ensure repeatability. Audio will be recorded directly to a computer at a minimum sampling rate of 44~kHz to capture the transient frequency content of swallowing signals with sufficient resolution~\cite{freq_chart,nyquist,adc}. Each recording will be labeled with ingestion type, bolus volume, and trial number. This standardized protocol ensures that the experiment can be replicated across multiple subjects while maintaining consistent conditions.
+
+\subsection{Ingestion Conditions}
+Swallowing trials will be conducted across four ingestate categories: liquid, semi-solid, solid, and pill, directly corresponding to the classification targets in the primary hypothesis. For each category, three bolus volumes will be tested: 5~mL, 10~mL, and 15~mL, as defined in the secondary hypotheses.
+
+Each condition will be repeated at least five times to reduce variability and enable reliable comparisons. The subject will be instructed to place the material in the mouth and swallow naturally without speaking or exaggerated movement. A rest period of 10--15 seconds between trials will prevent signal overlap and allow physiological signals to return to baseline. Trial order will be randomized to reduce bias and fatigue effects. These procedures ensure consistent and controlled data collection aligned with both the primary and secondary hypotheses.
+
+\subsection{Sensor System and Justification}
+The sensing system consists of a lavalier microphone connected to a computer-based analog-to-digital converter (ADC). This approach is selected because it allows high sampling rates ($\ge$ 44~kHz), which are necessary to capture transient swallowing events. Microphones are well-suited for this application because they detect pressure wave variations associated with biomechanical motion in the throat, similar to vibration-based sensing methods used in biomedical signal analysis.
+
+High-resolution audio acquisition systems are widely used in signal processing and provide sufficient fidelity for frequency-domain analysis, making them appropriate for distinguishing subtle physiological differences between ingestate types~\cite{freq_chart,nyquist,adc}. While the full research question involves multimodal sensing, this method establishes a foundation for evaluating whether a single modality can achieve classification above chance.
+
+\subsection{Signal Processing and Feature Extraction}
+Audio recordings will be processed in MATLAB using the Audio Toolbox. Each recording will be segmented to isolate individual swallowing events, either manually or using amplitude-based thresholding. A bandpass filter will be applied to remove noise outside the frequency range of interest.
+
+A Fast Fourier Transform (FFT) will then be applied to convert each signal from the time domain to the frequency domain, allowing analysis of how energy is distributed across frequencies~\cite{adc}. Multiple exemplars will be collected for each ingestate type, and their FFT spectra will be compared to identify consistent patterns.
+
+A taxonomy-based approach will be used to evaluate similarity between signals by grouping spectral features that are consistently present within each ingestion category. These features will be reduced into a fixed number of frequency bins, forming feature vectors for each trial. This process ensures that the extracted features directly reflect differences relevant to the classification task.
+
+\subsection{Data Analysis and Classification}
+The extracted feature vectors will be used to classify ingestate type (liquid, semi-solid, solid, pill) and bolus volume (5~mL, 10~mL, 15~mL), directly addressing the primary research question and hypotheses. Classification will be performed using pattern recognition methods such as k-nearest neighbors (k-NN) or support vector machines (SVM), which are widely used for multidimensional data analysis~\cite{bishop}.
+
+Model performance will be evaluated using classification accuracy, confusion matrices, and cross-validation. Results will be compared against chance-level performance (25\% for four classes) to determine whether meaningful classification is achieved. Additional analysis will examine how features such as signal amplitude and duration vary with bolus volume and ingestate type, supporting evaluation of the secondary hypotheses. The taxonomy developed during feature extraction will guide interpretation of which features are most informative for classification.
+
+\subsection{Expected Outcomes and Validation}
+Based on the hypotheses, it is expected that ingestate types will produce distinguishable frequency-domain signatures. Liquids are expected to produce shorter-duration, higher-frequency signals, while solids and pills may result in longer-duration, lower-frequency transients due to increased effort during swallowing. Larger bolus volumes are expected to increase both signal amplitude and swallow duration.
+
+Classification accuracy is expected to fall within a moderate range (approximately 65--75\%), exceeding chance performance. Validation will be performed by comparing predicted classifications to labeled ground truth data. If classification accuracy is only slightly above chance, this may indicate that swallowing differences in healthy adults are subtle or that additional sensing modalities (e.g., accelerometers) are required. These outcomes will directly inform the feasibility of multimodal wearable systems for swallowing analysis.
+
+\printbibliography
+
+\end{document}
