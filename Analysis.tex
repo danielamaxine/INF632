@@ -1,0 +1,56 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+\begin{document}
+
+\title{Analysis of Multimodal Classification of Ingestate Type Using Wearable Acoustic Sensing}
+
+\author{\IEEEauthorblockN{Daniela Hernández}
+\IEEEauthorblockA{Northern Arizona University \\
+Email: dmh599@nau.edu}}
+
+\maketitle
+
+\begin{abstract}
+Swallowing difficulties (dysphagia) can lead to serious health problems, yet current diagnostic methods are often confined to clinical environments. Dysphagia can affect the swallowing of both solids and liquids, with solids and semi-solids typically presenting the greatest challenges. This project investigates whether ingestate type can be classified using acoustic signals captured from the throat during swallowing. Different ingestates produce distinct sound and vibration patterns that can be analyzed using signal processing and machine learning techniques, enabling noninvasive monitoring outside clinical settings.
+
+Accurate classification of ingestate types—liquid, semi-solid, solid, and saliva—serves as a foundational step toward detecting abnormal swallowing behavior. By establishing baseline acoustic characteristics for normal swallowing across these categories, deviations from typical patterns can later be identified as potential indicators of impairment. This work therefore contributes to the development of accessible tools for early dysphagia detection.
+\end{abstract}
+
+\section{Methodology}
+
+Audio recordings of swallowing events were labeled according to ingestate type: liquid, semi-solid, solid, or saliva. Each signal was preprocessed by converting to mono, applying a high-pass filter to remove low-frequency noise, and trimming initial recording artifacts. Swallow events were detected using a short-time energy approach combined with peak detection, ensuring consistent segmentation of relevant acoustic events.
+
+For each detected swallow, both time-domain and frequency-domain features were extracted. Time-domain features included root mean square (RMS) energy, zero-crossing rate, signal duration, and logarithmic energy. Frequency-domain features included dominant frequency, spectral centroid, bandwidth, roll-off frequency, spectral entropy, spectral slope, spectral flatness, and high-frequency energy ratio. Spectrograms were also generated to visualize time-frequency behavior and validate feature relevance.
+
+All features were standardized using z-score normalization. Principal Component Analysis (PCA) was then applied to reduce dimensionality while preserving 95\% of the variance. This step enabled visualization of clustering behavior and reduced redundancy in the feature space.
+
+A $k$-nearest neighbors (KNN) classifier with $k=7$ was used to classify ingestate type. Model performance was evaluated using leave-one-out cross-validation, and results were summarized using a confusion matrix and PCA visualization.
+
+\section{Data Analysis and Results}
+
+The PCA plot reduces the high-dimensional feature space into two principal components, allowing visualization of how swallowing events cluster by ingestate type. Liquid and saliva samples exhibit more distinct clustering, while semi-solid and solid samples show significant overlap. This overlap indicates similarity in their acoustic properties and explains the higher rate of misclassification between these categories.
+
+The confusion matrix further highlights classification performance. Liquid and saliva achieved the highest accuracy, while semi-solid and solid were more frequently confused with one another. Most classification errors occurred between acoustically similar classes, reinforcing the observation that feature overlap limits separability.
+
+Spectrogram analysis provided additional insight into these results. Liquid and saliva swallows often displayed more distinct temporal and frequency patterns, whereas semi-solid and solid swallows exhibited broader and more overlapping frequency distributions. These similarities contribute to reduced classification performance for those categories.
+
+An aggregate frequency spectrum across all recordings revealed consistent energy distribution patterns, with variations in dominant frequency ranges across ingestate types. While these differences are meaningful, they are not always sufficient for complete separation using the current feature set.
+
+Overall, the model successfully captured meaningful acoustic structure, achieving an approximate classification accuracy of 65\% (38 correct predictions out of 58 samples). The results demonstrate that swallowing sounds contain discriminative information, though improved feature engineering or model complexity could enhance performance.
+
+\section{Discussion and Limitations}
+
+Several limitations impact the results of this study. The dataset is relatively small, which limits generalizability and increases sensitivity to noise and variability. Additionally, the swallow detection algorithm occasionally over-segmented recordings, detecting more events than were physically present. This introduces potential inconsistencies in feature extraction.
+
+Feature overlap between semi-solid and solid ingestates suggests that the current feature set does not fully capture the nuances required for clear separation. Furthermore, the KNN classifier, while simple and interpretable, may not effectively model complex nonlinear relationships within the data.
+
+\section{Conclusion}
+
+This study demonstrates the feasibility of classifying ingestate type using acoustic features derived from swallowing sounds. Liquid and saliva were classified with relatively high accuracy, while semi-solid and solid categories presented greater challenges due to overlapping acoustic characteristics.
+
+Despite these limitations, the results establish a baseline understanding of normal swallowing acoustics across ingestate types. This foundation is critical for future work aimed at detecting abnormal swallowing patterns associated with dysphagia. Future improvements will focus on expanding the dataset, refining feature extraction methods, and exploring more advanced classification models to improve accuracy and robustness.
+
+\end{document}
