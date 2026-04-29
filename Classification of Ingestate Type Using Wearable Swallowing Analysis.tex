@@ -1,0 +1,221 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{url}
+
+\begin{document}
+
+\title{Acoustic Classification of Ingestate Type Using Wearable Swallowing Analysis}
+
+\author{
+\IEEEauthorblockN{Daniela Hernández}
+\IEEEauthorblockA{
+School of Informatics, Computing, and Cyber Systems\\
+Northern Arizona University\\
+Flagstaff, AZ, USA\\
+dmh599@nau.edu
+}
+}
+
+\maketitle
+
+\begin{abstract}
+Dysphagia can lead to serious health complications, yet current diagnostic methods are largely limited to clinical environments. This study investigates whether ingestate type can be classified using acoustic signals recorded from the throat during swallowing. By applying signal processing and machine learning techniques, a noninvasive system is developed to analyze swallowing behavior.
+
+Audio recordings are processed through filtering, swallow detection, feature extraction, and classification. Time- and frequency-domain features are reduced using Principal Component Analysis (PCA), and a k-nearest neighbors (KNN) classifier is used to predict ingestate type. The model achieves approximately 65\% accuracy, demonstrating that swallowing acoustics contain meaningful discriminative information. However, overlap between semi-solid and solid ingestates limits classification performance. This work establishes a baseline for ingestate classification and highlights key challenges for wearable dysphagia monitoring systems.
+\end{abstract}
+
+\section{Introduction}
+
+Swallowing is a complex biomechanical process involving coordinated muscular activity and fluid transport. Dysphagia disrupts this process and can result in aspiration, malnutrition, and reduced quality of life. While clinical tools such as videofluoroscopy provide accurate diagnosis, they are not suitable for continuous or real-world monitoring.
+
+Wearable sensing offers a promising alternative. Prior work has demonstrated that acoustic and accelerometric signals can detect swallowing events \cite{1}, \cite{6}. However, most existing systems focus on detection rather than classification.
+
+Different ingestates exhibit distinct physical properties. Liquids require less force and shorter duration, while solids and semi-solids require more complex swallowing dynamics \cite{4}, \cite{5}. This study evaluates whether these differences can be captured acoustically and used for classification.
+
+\section{Methodology}
+
+\subsection{System Overview}
+
+The implemented MATLAB pipeline processes audio recordings through the following stages:
+
+\begin{enumerate}
+    \item File parsing and label extraction
+    \item Signal preprocessing and filtering
+    \item Swallow detection using energy-based methods
+    \item Spectrogram generation for visualization
+    \item Feature extraction (time and frequency domain)
+    \item Feature normalization and dimensionality reduction (PCA)
+    \item Classification using KNN
+\end{enumerate}
+
+\subsection{Data Labeling}
+
+File names encode ingestate type (liquid, semi, solid, saliva) and bolus size (small, medium, large). Labels are extracted programmatically by parsing filenames, ensuring consistent ground truth assignment.
+
+\subsection{Preprocessing}
+
+Audio signals are converted to mono and filtered using a fourth-order high-pass Butterworth filter with a 20 Hz cutoff. This removes low-frequency noise and motion artifacts. The first 0.1 seconds of each recording are removed to eliminate recording transients.
+
+\subsection{Swallow Detection}
+
+Swallow events are detected using short-time energy:
+
+\[
+E[n] = \text{movmean}(x[n]^2)
+\]
+
+The energy signal is normalized and smoothed before peak detection. Peaks above a threshold (0.2) are identified as swallow events, with a minimum separation of 0.7 seconds.
+
+\textbf{Implementation Challenge:}  
+The detection algorithm occasionally over-segments recordings, identifying more swallow events than physically present. This introduces redundant samples and affects classification performance.
+
+\subsection{Spectrogram Analysis}
+
+For each detected swallow event, a spectrogram is generated using a 30 ms window, high overlap, and a 4096-point FFT. The frequency range is limited to 0–1.5 kHz to focus on relevant swallowing frequencies.
+
+Dynamic range compression (50 dB) is applied to improve visualization clarity. Spectrograms provide qualitative insight into time-frequency patterns and help validate feature extraction.
+
+\subsection{Feature Extraction}
+
+Each swallow event is represented by a feature vector combining time- and frequency-domain characteristics.
+
+\textbf{Time-domain features:}
+\begin{itemize}
+    \item Root mean square (RMS) energy
+    \item Zero-crossing rate
+    \item Log energy
+    \item Event duration
+\end{itemize}
+
+\textbf{Frequency-domain features:}
+\begin{itemize}
+    \item Dominant frequency
+    \item Spectral centroid
+    \item Bandwidth
+    \item Roll-off frequency (85\%)
+    \item Spectral entropy
+    \item Spectral slope
+    \item Spectral flatness
+    \item High-frequency energy ratio
+\end{itemize}
+
+FFT analysis is limited to frequencies below 2 kHz to focus on physiologically relevant signals.
+
+\subsection{Normalization and PCA}
+
+Features are standardized using z-score normalization:
+
+\[
+X_{norm} = \frac{X - \mu}{\sigma}
+\]
+
+Principal Component Analysis (PCA) reduces dimensionality while retaining 95\% of variance. This step improves computational efficiency and enables visualization of clustering patterns.
+
+\subsection{Classification Using KNN}
+
+A k-nearest neighbors classifier with \(k = 7\) is used.
+
+\textbf{Important clarification:}  
+The parameter \(k\) represents the number of nearest samples used for voting, not the number of classes. Although there are four ingestate classes, a larger \(k\) improves robustness by reducing sensitivity to noise.
+
+Distances are computed using Euclidean distance:
+
+\[
+d = \sqrt{\sum (x_i - x_j)^2}
+\]
+
+The predicted label is determined by majority vote among the seven nearest neighbors.
+
+\textbf{Design justification:}
+\begin{itemize}
+    \item \(k=7\) provides a balance between noise reduction and local sensitivity
+    \item Using an odd value avoids tie votes
+    \item Larger \(k\) values smooth decision boundaries in small datasets
+\end{itemize}
+
+Leave-one-out cross-validation is used to evaluate performance.
+
+\section{Results and Analysis}
+
+The classifier achieved approximately 65\% accuracy (38/58 correct predictions).
+
+\subsection{PCA Visualization}
+
+PCA projections show:
+\begin{itemize}
+    \item Distinct clustering for liquid and saliva
+    \item Significant overlap between semi-solid and solid
+\end{itemize}
+
+This indicates that some ingestates produce clearly separable acoustic patterns, while others do not.
+
+\subsection{Confusion Matrix}
+
+The confusion matrix reveals that most misclassifications occur between semi-solid and solid ingestates. Errors are concentrated between acoustically similar classes rather than across all categories.
+
+\subsection{Spectrogram Observations}
+
+Spectrograms show:
+\begin{itemize}
+    \item Liquids: sharp, short-duration frequency bursts
+    \item Solids: broader, lower-frequency distributions
+    \item Semi-solids: intermediate characteristics
+\end{itemize}
+
+These observations align with biomechanical expectations but also explain classification overlap.
+
+\section{Discussion}
+
+The results demonstrate that acoustic signals contain meaningful information for ingestate classification. The success of liquid and saliva classification suggests that simpler swallowing dynamics produce more consistent acoustic signatures.
+
+However, the overlap between semi-solid and solid ingestates indicates that the current feature set does not fully capture subtle biomechanical differences. PCA confirms that the feature space is only partially separable.
+
+\section{Limitations}
+
+Several limitations affect the findings:
+
+\begin{itemize}
+    \item Small dataset size reduces generalizability
+    \item Over-segmentation introduces redundant samples
+    \item Feature overlap limits separability
+     \item Testing location with variable background noise
+    \item KNN cannot model complex nonlinear relationships
+\end{itemize}
+
+These limitations directly impact classification accuracy and highlight areas for improvement.
+
+\section{Conclusion}
+
+This study demonstrates that ingestate type can be classified using acoustic features with moderate accuracy. While liquids and saliva are distinguishable, semi-solid and solid ingestates remain challenging due to overlapping characteristics.
+
+The results establish a baseline for wearable dysphagia monitoring and highlight the importance of improved feature extraction and multimodal sensing for future work.
+
+\begin{thebibliography}{00}
+
+\bibitem{1}
+D. Hossain et al., “Sensor-Based Methods for Measurement of Eating Behavior,” Sensors, 2025.
+
+\bibitem{2}
+H. Kalantarian et al., “Monitoring Eating Habits Using a Piezoelectric Sensor,” 2015.
+
+\bibitem{3}
+M. K. O’Brien et al., “Machine Learning for Dysphagia Monitoring,” 2021.
+
+\bibitem{4}
+M. T. Murillo-Arbizu et al., “Textural Classification of Foods for Dysphagia,” 2025.
+
+\bibitem{5}
+M. C. Wong et al., “Texture-Modified Foods and Thickened Liquids,” 2023.
+
+\bibitem{6}
+B. So et al., “Swallow Detection with Wearable Technology,” 2022.
+
+\bibitem{7}
+Y. Song et al., “Multimodal Classification with Wearable Sensors,” 2025.
+
+\end{thebibliography}
+
+\end{document}
